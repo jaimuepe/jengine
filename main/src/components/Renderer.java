@@ -1,9 +1,6 @@
 package components;
 
-import core.Axis;
-import core.Entity;
-import core.Mat4;
-import core.Vec3;
+import core.*;
 import util.MyGraphics;
 import util.RenderContext;
 import util.Transform;
@@ -12,47 +9,47 @@ import java.util.Arrays;
 
 public class Renderer extends Component {
 
-    private Vec3[] vertices;
-    private int[] indices;
+    private MeshData meshData;
 
     public Renderer(Entity owner) {
-
         super("renderer", owner);
         setFlag(Flags.DRAWABLE);
-
-        vertices = new Vec3[0];
-        indices = new int[0];
     }
 
-    public void setData(Vec3[] vertices, int[] indices) {
-        this.vertices = Arrays.copyOf(vertices, vertices.length);
-        this.indices = Arrays.copyOf(indices, indices.length);
+    public void setData(MeshData meshData) {
+        this.meshData = meshData;
     }
 
     @Override
     public void render(RenderContext context) {
 
-        // v' = v * S * R * T * V * P
+        if (meshData == null) {
+            return;
+        }
 
-        Mat4 mat = context.camera.getVP();
+        // v' = v * M * V * P
 
-        Vec3 pos = owner.transform.getPosition();
-        mat = Transform.translate(mat, pos);
+        Mat4 VP = context.camera.getVP();
 
-        Vec3 rot = owner.transform.getRotation();
-        mat = Transform.rotate(mat, rot.x, Axis.X);
-        mat = Transform.rotate(mat, rot.y, Axis.Y);
-        mat = Transform.rotate(mat, rot.z, Axis.Z);
+        Mat4 M = owner.transform.getModelMatrix();
 
-        Vec3 scale = owner.transform.getScale();
-        mat = Transform.scale(mat, scale);
+        Mat4 MVP = M.mul(VP);
 
-        Vec3[] verts = Transform.transformPoints(vertices, mat);
+        Vec3[] verts = Transform.transformPoints(meshData.vertices, MVP);
 
-        for (int i = 0; i < 4; ++i) {
-            MyGraphics.drawLine(context, verts[i], verts[(i + 1) % 4]);
-            MyGraphics.drawLine(context, verts[4 + i], verts[4 + (i + 1) % 4]);
-            MyGraphics.drawLine(context, verts[i], verts[4 + i]);
+        // Mat4 normalMatrix =
+
+        for (int i = 0; i < meshData.indices.length; i += 3) {
+
+            Vec3 p1 = verts[meshData.indices[i]];
+            Vec3 p2 = verts[meshData.indices[i + 1]];
+            Vec3 p3 = verts[meshData.indices[i + 2]];
+
+            Vec3 n = meshData.normals[i / 3];
+
+            MyGraphics.drawLine(context, p1, p2);
+            MyGraphics.drawLine(context, p2, p3);
+            MyGraphics.drawLine(context, p3, p1);
         }
     }
 }

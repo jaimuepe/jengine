@@ -14,7 +14,7 @@ public class Cube extends Entity {
 
     public Cube() {
         Renderer renderer = new Renderer(this);
-        renderer.setData(Meshes.CUBE_1x1, new int[]{});
+        renderer.setData(Meshes.CUBE_1x1);
         addComponent(renderer);
     }
 }

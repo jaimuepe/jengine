@@ -6,10 +6,24 @@ public class Transform {
     private final Vec3 scale;
     private final Vec3 rotation;
 
+    private Mat4 _M;
+    private boolean mDirty;
+
     public Transform() {
         position = new Vec3();
         scale = new Vec3(1.0, 1.0, 1.0);
         rotation = new Vec3();
+
+        mDirty = true;
+    }
+
+    public Mat4 getModelMatrix() {
+
+        if (mDirty) {
+            calculateModelMatrix();
+        }
+
+        return _M;
     }
 
     public void translate(Vec3 t) {
@@ -58,5 +72,16 @@ public class Transform {
 
     public Vec3 getRotation() {
         return new Vec3(rotation);
+    }
+
+    private void calculateModelMatrix() {
+
+        _M = util.Transform.translate(Mat4.identity(), position);
+
+        _M = util.Transform.rotate(_M, rotation.x, Axis.X);
+        _M = util.Transform.rotate(_M, rotation.y, Axis.Y);
+        _M = util.Transform.rotate(_M, rotation.z, Axis.Z);
+
+        _M = util.Transform.scale(_M, scale);
     }
 }

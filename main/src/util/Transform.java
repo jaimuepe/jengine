@@ -58,6 +58,10 @@ public class Transform {
         return tmp.mul(mat);
     }
 
+    public static Vec3[] transformDirections(Vec3[] directions, Mat4 mat) {
+        return null;
+    }
+
     public static Vec3[] transformPoints(Vec3[] points, Mat4 mat) {
 
         Vec3[] res = new Vec3[points.length];
