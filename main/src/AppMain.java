@@ -39,16 +39,14 @@ public class AppMain {
 			@Override
 			public void update(UpdateContext context) {
 
-				double t = context.time / 1000.0;
-
-				rotation.y = t;
+				transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
 //				rotation.y = Math.sin(t);
 			};
 		};
 
-		spinnyCube1.setPosition(new Vec3(0, 0, 10));
-		spinnyCube1.setScale(new Vec3(5.0, 1.0, 1.0));
-		spinnyCube1.setRotation(new Vec3(-0.3, 0.0, 0.0));
+		spinnyCube1.transform.setPosition(new Vec3(0, 0, 10));
+		spinnyCube1.transform.setScale(new Vec3(5.0, 1.0, 1.0));
+		spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.0, 0.0));
 
 		Cube spinnyCube2 = new Cube() {
 
@@ -57,8 +55,8 @@ public class AppMain {
 
 				double t = context.time / 1000.0;
 
-				rotation.x = Math.cos(-0.5 + t);
-				rotation.y = Math.sin(0.6 + t);
+//				rotation.x = Math.cos(-0.5 + t);
+//				rotation.y = Math.sin(0.6 + t);
 			};
 		};
 

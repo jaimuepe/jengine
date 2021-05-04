@@ -21,12 +21,15 @@ public class Cube extends Entity {
 
 		Mat4 mat = context.camera.getVP();
 
-		mat = Transform.translate(mat, position);
+		Vec3 pos = transform.getPosition();
+		mat = Transform.translate(mat, pos);
 
-		mat = Transform.rotate(mat, rotation.x, Axis.X);
-		mat = Transform.rotate(mat, rotation.y, Axis.Y);
-		mat = Transform.rotate(mat, rotation.z, Axis.Z);
+		Vec3 rot = transform.getRotation();
+		mat = Transform.rotate(mat, rot.x, Axis.X);
+		mat = Transform.rotate(mat, rot.y, Axis.Y);
+		mat = Transform.rotate(mat, rot.z, Axis.Z);
 
+		Vec3 scale = transform.getScale();
 		mat = Transform.scale(mat, scale);
 
 		Vec3[] verts = Transform.transformPoints(vertices, mat);
