@@ -1,6 +1,6 @@
 package util;
 
-import java.awt.Graphics;
+import java.awt.*;
 
 import core.Vec3;
 

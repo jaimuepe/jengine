@@ -6,6 +6,7 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
+import core.Entity;
 import core.World;
 import util.RenderContext;
 
@@ -38,8 +39,10 @@ public class Canvas {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            RenderContext rc = new RenderContext(world.getMainCamera(), 800, 800, g);
-            world.getEntities().forEach(e -> e.draw(rc));
+            RenderContext context = new RenderContext(world.getMainCamera(), 800, 800, g);
+            for (Entity e : world.getEntities()) {
+                e.render(context);
+            }
         }
     }
 }
