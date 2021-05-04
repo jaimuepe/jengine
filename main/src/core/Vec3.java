@@ -2,126 +2,122 @@ package core;
 
 public class Vec3 {
 
-	public double x;
-	public double y;
-	public double z;
+    public double x;
+    public double y;
+    public double z;
 
-	public Vec3() {
-	}
+    public Vec3() {
+    }
 
-	public Vec3(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+    public Vec3(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
-	public Vec3(Vec3 source) {
-		this.x = source.x;
-		this.y = source.y;
-		this.z = source.z;
-	}
+    public Vec3(Vec3 source) {
+        this.x = source.x;
+        this.y = source.y;
+        this.z = source.z;
+    }
 
-	public double dot(Vec3 other) {
-		return dot(this, other);
-	}
+    public double dot(Vec3 other) {
+        return dot(this, other);
+    }
 
-	public Vec3 sum(Vec3 other) {
-		return sum(this, other);
-	}
+    public Vec3 sum(Vec3 other) {
+        return sum(this, other);
+    }
 
-	public Vec3 minus(Vec3 other) {
-		return minus(this, other);
-	}
+    public Vec3 minus(Vec3 other) {
+        return minus(this, other);
+    }
 
-	public Vec3 mul(double value) {
-		return mul(this, value);
-	}
+    public Vec3 mul(double value) {
+        return mul(this, value);
+    }
 
-	public Vec3 cross(Vec3 other) {
-		return cross(this, other);
-	}
+    public Vec3 cross(Vec3 other) {
+        return cross(this, other);
+    }
 
-	public static double dot(Vec3 u, Vec3 v) {
-		return u.x * v.x + u.y * v.y + u.z * v.z;
-	}
+    public static double dot(Vec3 u, Vec3 v) {
+        return u.x * v.x + u.y * v.y + u.z * v.z;
+    }
 
-	public static Vec3 sum(Vec3 u, Vec3 v) {
-		return new Vec3(u.x + v.x, u.y + v.y, u.z + v.z);
-	}
+    public static Vec3 sum(Vec3 u, Vec3 v) {
+        return new Vec3(u.x + v.x, u.y + v.y, u.z + v.z);
+    }
 
-	public static Vec3 minus(Vec3 u, Vec3 v) {
-		return new Vec3(u.x - v.x, u.y - v.y, u.z - v.z);
-	}
+    public static Vec3 minus(Vec3 u, Vec3 v) {
+        return new Vec3(u.x - v.x, u.y - v.y, u.z - v.z);
+    }
 
-	public static Vec3 mul(Vec3 vec, double value) {
-		return new Vec3(vec.x * value, vec.y * value, vec.z * value);
-	}
+    public static Vec3 mul(Vec3 vec, double value) {
+        return new Vec3(vec.x * value, vec.y * value, vec.z * value);
+    }
 
-	public static Vec3 cross(Vec3 u, Vec3 v) {
+    public static Vec3 cross(Vec3 u, Vec3 v) {
 
-		double x = u.y * v.z - u.z * v.y;
-		double y = -(u.x * v.z - u.z * v.x);
-		double z = u.x * v.y - u.y * v.x;
+        double x = u.y * v.z - u.z * v.y;
+        double y = -(u.x * v.z - u.z * v.x);
+        double z = u.x * v.y - u.y * v.x;
 
-		return new Vec3(x, y, z);
-	}
+        return new Vec3(x, y, z);
+    }
 
-	public Vec3 normalized() {
-		double len = Math.sqrt(x * x + y * y + z * z);
-		return new Vec3(x / len, y / len, z / len);
-	}
+    public Vec3 normalized() {
+        double len = Math.sqrt(x * x + y * y + z * z);
+        return new Vec3(x / len, y / len, z / len);
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
 
-		final int prime = 31;
-		int result = 1;
-		long temp;
+        final int prime = 31;
+        int result = 1;
+        long temp;
 
-		temp = Double.doubleToLongBits(x);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(y);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(z);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(z);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
 
-		if (this == obj) {
-			return true;
-		}
+        if (this == obj) {
+            return true;
+        }
 
-		if (obj == null) {
-			return false;
-		}
+        if (obj == null) {
+            return false;
+        }
 
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
 
-		Vec3 other = (Vec3) obj;
+        Vec3 other = (Vec3) obj;
 
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
-			return false;
-		}
+        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)) {
+            return false;
+        }
 
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) {
-			return false;
-		}
+        if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y)) {
+            return false;
+        }
 
-		if (Double.doubleToLongBits(z) != Double.doubleToLongBits(other.z)) {
-			return false;
-		}
+        return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z);
+    }
 
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "[" + x + ", " + y + ", " + z + "]";
-	}
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + ", " + z + "]";
+    }
 }

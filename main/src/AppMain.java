@@ -14,122 +14,102 @@ import util.UpdateContext;
 
 public class AppMain {
 
-	private static final int WIDTH = 800;
-	private static final int HEIGHT = 800;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 800;
 
-	private static final double UPDATE_TARGET_FRAME_TIME = 1000.0 / 60.0;
-	private static final double RENDER_TARGET_FRAME_TIME = 1000.0 / 60.0;
+    private static final double UPDATE_TARGET_FRAME_TIME = 1000.0 / 60.0;
+    private static final double RENDER_TARGET_FRAME_TIME = 1000.0 / 60.0;
 
-	private static Thread mainThread;
+    public static void main(String[] args) {
 
-	private static AtomicBoolean shouldQuit = new AtomicBoolean(false);
+        final AtomicBoolean shouldQuit = new AtomicBoolean(false);
 
-	public static void main(String[] args) throws InterruptedException {
+        double aspectRatio = (double) WIDTH / HEIGHT;
 
-		double aspectRatio = (double) WIDTH / HEIGHT;
+        World world = new World();
 
-		World world = new World();
+        Camera camera = new Camera(0.1, aspectRatio, 100.0f, 90.0f);
 
-		Camera camera = new Camera(0.1, aspectRatio, 100.0f, 90.0f);
+        world.setMainCamera(camera);
 
-		world.setMainCamera(camera);
+        Cube spinnyCube1 = new Cube() {
 
-		Cube spinnyCube1 = new Cube() {
-
-			@Override
-			public void update(UpdateContext context) {
-
-				transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
+            @Override
+            public void update(UpdateContext context) {
+                transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
 //				rotation.y = Math.sin(t);
-			};
-		};
+            }
+        };
 
-		spinnyCube1.transform.setPosition(new Vec3(0, 0, 10));
-		spinnyCube1.transform.setScale(new Vec3(5.0, 1.0, 1.0));
-		spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.0, 0.0));
+        spinnyCube1.transform.setPosition(new Vec3(0, 0, 10));
+        spinnyCube1.transform.setScale(new Vec3(5.0, 1.0, 1.0));
+        spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.0, 0.0));
 
-		Cube spinnyCube2 = new Cube() {
+        world.register(spinnyCube1);
 
-			@Override
-			public void update(UpdateContext context) {
+        Canvas canvas = new Canvas(world);
+        canvas.setPreferredSize(WIDTH, HEIGHT);
 
-				double t = context.time / 1000.0;
+        JFrame f = new JFrame();
+        f.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                shouldQuit.set(true);
+            }
+        });
 
-//				rotation.x = Math.cos(-0.5 + t);
-//				rotation.y = Math.sin(0.6 + t);
-			};
-		};
+        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-//		spinnyCube2.setPosition(new Vec3(500, 400, 0));
-//		spinnyCube2.setScale(new Vec3(20, 20, 20));
-//		spinnyCube2.setRotation(new Vec3(-2.0, 0.0, 0.0));
+        f.getContentPane().setLayout(new BorderLayout());
+        f.getContentPane().add(canvas.getComponent(), BorderLayout.CENTER);
 
-		world.register(spinnyCube1);
-//		world.register(spinnyCube2);
+        final Thread mainThread = new Thread(() -> {
 
-		Canvas canvas = new Canvas(world);
-		canvas.setPreferredSize(WIDTH, HEIGHT);
+            double steps = 0.0;
+            double lastTime = getTime();
 
-		JFrame f = new JFrame();
-		f.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				shouldQuit.set(true);
-			}
-		});
+            while (!shouldQuit.get()) {
 
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                double loopStartTime = getTime();
+                double deltaTime = loopStartTime - lastTime;
+                lastTime = loopStartTime;
+                steps += deltaTime;
 
-		f.getContentPane().setLayout(new BorderLayout());
-		f.getContentPane().add(canvas.getComponent(), BorderLayout.CENTER);
+                f.setTitle("FPS: " + (1000.0 / deltaTime));
 
-		mainThread = new Thread(() -> {
+                while (steps >= UPDATE_TARGET_FRAME_TIME) {
+                    UpdateContext uc = new UpdateContext(world, loopStartTime, deltaTime);
+                    update(uc);
+                    steps -= UPDATE_TARGET_FRAME_TIME;
+                }
 
-			double steps = 0.0;
-			double lastTime = getTime();
+                canvas.draw();
 
-			while (!shouldQuit.get()) {
+                sync(loopStartTime);
+            }
+        });
 
-				double loopStartTime = getTime();
-				double deltaTime = loopStartTime - lastTime;
-				lastTime = loopStartTime;
-				steps += deltaTime;
+        mainThread.start();
 
-				f.setTitle("FPS: " + (1000.0 / deltaTime));
+        f.pack();
+        f.setVisible(true);
+    }
 
-				while (steps >= UPDATE_TARGET_FRAME_TIME) {
-					UpdateContext uc = new UpdateContext(world, loopStartTime, deltaTime);
-					update(uc);
-					steps -= UPDATE_TARGET_FRAME_TIME;
-				}
+    private static long getTime() {
+        return System.currentTimeMillis();
+    }
 
-				canvas.draw();
+    private static void sync(double loopStartTime) {
+        double endTime = loopStartTime + RENDER_TARGET_FRAME_TIME;
+        while (getTime() < endTime) {
+            try {
+                Thread.sleep(1L);
+            } catch (InterruptedException ignored) {
+            }
+        }
+    }
 
-				sync(loopStartTime);
-			}
-		});
-
-		mainThread.start();
-
-		f.pack();
-		f.setVisible(true);
-	}
-
-	private static long getTime() {
-		return System.currentTimeMillis();
-	}
-
-	private static void sync(double loopStartTime) {
-		double endTime = loopStartTime + RENDER_TARGET_FRAME_TIME;
-		while (getTime() < endTime) {
-			try {
-				Thread.sleep(1L);
-			} catch (InterruptedException ie) {
-			}
-		}
-	}
-
-	private static void update(UpdateContext context) {
-		context.world.getEntities().forEach(e -> e.update(context));
-	}
+    private static void update(UpdateContext context) {
+        context.world.getEntities().forEach(e -> e.update(context));
+    }
 }

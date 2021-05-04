@@ -5,17 +5,17 @@ import util.UpdateContext;
 
 public abstract class Entity {
 
-	public Transform transform;
+    public Transform transform;
 
-	protected Vec3 vertices[];
+    protected Vec3[] vertices;
 
-	public Entity() {
-		transform = new Transform();
-	}
+    public Entity() {
+        transform = new Transform();
+    }
 
-	public void update(UpdateContext context) {
-		return;
-	};
+    public void update(UpdateContext context) {
+        return;
+    }
 
-	public abstract void draw(RenderContext context);
+    public abstract void draw(RenderContext context);
 }

@@ -4,17 +4,17 @@ import core.World;
 
 public class UpdateContext {
 
-	public final World world;
+    public final World world;
 
-	public final double time;
-	
-	public final double deltaTime;
-	public final double deltaTimeSeconds;
+    public final double time;
 
-	public UpdateContext(World world, double time, double deltaTime) {
-		this.world = world;
-		this.time = time;
-		this.deltaTime = deltaTime;
-		this.deltaTimeSeconds = deltaTime * 0.001;
-	}
+    public final double deltaTime;
+    public final double deltaTimeSeconds;
+
+    public UpdateContext(World world, double time, double deltaTime) {
+        this.world = world;
+        this.time = time;
+        this.deltaTime = deltaTime;
+        this.deltaTimeSeconds = deltaTime * 0.001;
+    }
 }
