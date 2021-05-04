@@ -26,14 +26,12 @@ public class Vec4 {
 
     public Vec4 mul(Mat4 mat) {
 
-        Vec4 res = new Vec4();
-
-        res.x = x * mat.get(0, 0) + y * mat.get(1, 0) + z * mat.get(2, 0) + w * mat.get(3, 0);
-        res.y = x * mat.get(0, 1) + y * mat.get(1, 1) + z * mat.get(2, 1) + w * mat.get(3, 1);
-        res.z = x * mat.get(0, 2) + y * mat.get(1, 2) + z * mat.get(2, 2) + w * mat.get(3, 2);
-        res.w = x * mat.get(0, 3) + y * mat.get(1, 3) + z * mat.get(2, 3) + w * mat.get(3, 3);
-
-        return res;
+        return new Vec4(
+                x * mat.get(0, 0) + y * mat.get(1, 0) + z * mat.get(2, 0) + w * mat.get(3, 0),
+                x * mat.get(0, 1) + y * mat.get(1, 1) + z * mat.get(2, 1) + w * mat.get(3, 1),
+                x * mat.get(0, 2) + y * mat.get(1, 2) + z * mat.get(2, 2) + w * mat.get(3, 2),
+                x * mat.get(0, 3) + y * mat.get(1, 3) + z * mat.get(2, 3) + w * mat.get(3, 3)
+        );
     }
 
     public Vec3 toVec3() {

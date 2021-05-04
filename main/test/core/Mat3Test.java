@@ -29,10 +29,18 @@ class Mat3Test {
     @Test
     public void mul() {
 
-        Vec3 vec = new Vec3(1.0, 2.0, 3.0);
+        Vec3 vec = new Vec3(2.0, 1.0, 3.0);
 
         assertEquals(
                 vec.mul(Mat3.identity()),
                 vec);
+
+        assertEquals(
+                vec.mul(new Mat3(
+                        1.0, 2.0, 3.0,
+                        4.0, 5.0, 6.0,
+                        7.0, 8.0, 9.0
+                )),
+                new Vec3(27.0, 33.0, 39.0));
     }
 }

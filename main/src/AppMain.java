@@ -36,14 +36,13 @@ public class AppMain {
 
             @Override
             public void update(UpdateContext context) {
-                // transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
-//				rotation.y = Math.sin(t);
+                transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
             }
         };
 
         spinnyCube1.transform.setPosition(new Vec3(0, 0, 10));
-        spinnyCube1.transform.setScale(new Vec3(1.0, 1.0, 1.0));
-        // spinnyCube1.transform.setRotation(new Vec3(-0.0, 1.4, 0.0));
+        spinnyCube1.transform.setScale(new Vec3(1.0, 1.0, 3.0));
+        spinnyCube1.transform.setRotation(new Vec3(-0.0, 1.4, 0.0));
 
         world.register(spinnyCube1);
 

@@ -37,29 +37,25 @@ public class Transform {
         switch (axis) {
             case X:
                 tmp.set(1, 1, cos);
-                tmp.set(2, 1, -sin);
                 tmp.set(1, 2, sin);
+                tmp.set(2, 1, -sin);
                 tmp.set(2, 2, cos);
                 break;
             case Y:
                 tmp.set(0, 0, cos);
-                tmp.set(2, 0, -sin);
-                tmp.set(0, 2, sin);
+                tmp.set(0, 2, -sin);
+                tmp.set(2, 0, sin);
                 tmp.set(2, 2, cos);
                 break;
             case Z:
                 tmp.set(0, 0, cos);
-                tmp.set(1, 0, -sin);
                 tmp.set(0, 1, sin);
+                tmp.set(1, 0, -sin);
                 tmp.set(1, 1, cos);
                 break;
         }
 
         return tmp.mul(mat);
-    }
-
-    public static Vec3[] transformDirections(Vec3[] directions, Mat4 mat) {
-        return null;
     }
 
     public static Vec3[] transformPoints(Vec3[] points, Mat4 mat) {

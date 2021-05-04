@@ -63,9 +63,9 @@ public class Vec3 {
 
     public static Vec3 mul(Vec3 v, Mat3 mat) {
         return new Vec3(
-                v.x * mat.data[0] + v.y * mat.data[1] + v.z * mat.data[2],
-                v.x * mat.data[3] + v.y * mat.data[4] + v.z * mat.data[5],
-                v.x * mat.data[6] + v.y * mat.data[7] + v.z * mat.data[8]
+                v.x * mat.data[0] + v.y * mat.data[3] + v.z * mat.data[6],
+                v.x * mat.data[1] + v.y * mat.data[4] + v.z * mat.data[7],
+                v.x * mat.data[2] + v.y * mat.data[5] + v.z * mat.data[8]
         );
     }
 
