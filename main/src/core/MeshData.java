@@ -27,7 +27,9 @@ public class MeshData {
             Vec3 U = p2.minus(p1);
             Vec3 V = p3.minus(p1);
 
-            normals[i / 3] = U.cross(V).normalized();
+            Vec3 n = U.cross(V).normalized();
+
+            normals[i / 3] = n;
         }
     }
 }

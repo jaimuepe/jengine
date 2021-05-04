@@ -37,6 +37,10 @@ public class Vec3 {
         return mul(this, value);
     }
 
+    public Vec3 mul(Mat3 mat) {
+        return mul(this, mat);
+    }
+
     public Vec3 cross(Vec3 other) {
         return cross(this, other);
     }
@@ -55,6 +59,14 @@ public class Vec3 {
 
     public static Vec3 mul(Vec3 vec, double value) {
         return new Vec3(vec.x * value, vec.y * value, vec.z * value);
+    }
+
+    public static Vec3 mul(Vec3 v, Mat3 mat) {
+        return new Vec3(
+                v.x * mat.data[0] + v.y * mat.data[1] + v.z * mat.data[2],
+                v.x * mat.data[3] + v.y * mat.data[4] + v.z * mat.data[5],
+                v.x * mat.data[6] + v.y * mat.data[7] + v.z * mat.data[8]
+        );
     }
 
     public static Vec3 cross(Vec3 u, Vec3 v) {
