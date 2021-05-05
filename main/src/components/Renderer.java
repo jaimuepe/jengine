@@ -37,24 +37,30 @@ public class Renderer extends Component {
 
         Vec3[] verts = Transform.transformPoints(meshData.vertices, MVP);
 
-        Mat3 normalMatrix = new Mat3(M.inverse().transpose());
+        // Mat3 normalMatrix = new Mat3(M.inverse().transpose());
         // Mat3 normalMatrix = new Mat3(M);
 
         for (int i = 0; i < meshData.indices.length; i += 3) {
-
 
             Vec3 p1 = verts[meshData.indices[i]];
             Vec3 p2 = verts[meshData.indices[i + 1]];
             Vec3 p3 = verts[meshData.indices[i + 2]];
 
-            Vec3 n = meshData.normals[i / 3].mul(normalMatrix).normalized();
-
-            Vec3 cameraForward = new Vec3(0.0, 0.0, -1.0);
-            double d = cameraForward.dot(n);
-
-            if (d < 0.08) {
-                continue;
+            Vec3 edgeA = p2.minus(p1).normalized();
+            Vec3 edgeB = p3.minus(p1).normalized();
+            
+            if ((edgeA.x * edgeB.y - edgeA.y * edgeB.x) > 0.0) {
+            	continue;
             }
+            
+            // Vec3 n = meshData.normals[i / 3].mul(normalMatrix).normalized();
+
+            // Vec3 cameraForward = new Vec3(0.0, 0.0, -1.0);
+            // double d = cameraForward.dot(n);
+
+            // if (d < 0.08) {
+            //     continue;
+            // }
 
             MyGraphics.drawLine(context, p1, p2);
             MyGraphics.drawLine(context, p2, p3);
