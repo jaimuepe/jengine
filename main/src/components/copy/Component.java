@@ -1,4 +1,4 @@
-package components;
+package components.copy;
 
 import core.Entity;
 import util.RenderContext;
@@ -11,28 +11,14 @@ public abstract class Component {
         public static final int UPDATABLE = 1 << 1;
     }
 
-    public final String id;
-    
     protected Entity owner;
-    
-    private int flags;
+    protected int flags;
 
+    private final String id;
 
     public Component(String id) {
         this.id = id;
     }
-
-    public void render(RenderContext context) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void update(UpdateContext context) {
-        throw new UnsupportedOperationException();
-    }
-    
-	public Entity getOwner() {
-		return owner;
-	}
 
     public void setFlag(int flag) {
         this.flags |= flag;
@@ -46,7 +32,11 @@ public abstract class Component {
         return flags;
     }
 
-	public void setOwner(Entity owner) {
-		this.owner = owner;
-	}
+    public void render(RenderContext context) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void update(UpdateContext context) {
+        throw new UnsupportedOperationException();
+    }
 }

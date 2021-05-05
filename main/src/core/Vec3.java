@@ -82,6 +82,10 @@ public class Vec3 {
         double len = Math.sqrt(x * x + y * y + z * z);
         return new Vec3(x / len, y / len, z / len);
     }
+    
+    public static Vec3 rand() {
+    	return new Vec3(Math.random(), Math.random(), Math.random());
+    }
 
     @Override
     public int hashCode() {

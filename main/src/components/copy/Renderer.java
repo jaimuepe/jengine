@@ -1,4 +1,4 @@
-package components;
+package components.copy;
 
 import core.Mat4;
 import core.MeshData;
@@ -30,7 +30,7 @@ public class Renderer extends Component {
         // v' = v * M * V * P
 
         Mat4 VP = context.camera.getVP();
-        Mat4 M = getOwner().transform.getModelMatrix();
+        Mat4 M = owner.transform.getModelMatrix();
 
         Mat4 MVP = M.mul(VP);
 
@@ -44,9 +44,9 @@ public class Renderer extends Component {
 
             Vec3 edgeA = p2.minus(p1).normalized();
             Vec3 edgeB = p3.minus(p1).normalized();
-
+            
             if ((edgeA.x * edgeB.y - edgeA.y * edgeB.x) > 0.0) {
-                continue;
+            	continue;
             }
 
             MyGraphics.drawLine(context, p1, p2);

@@ -3,6 +3,8 @@ package ui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
@@ -13,8 +15,8 @@ import util.RenderContext;
 public class Canvas {
 
     private final World world;
-    private final JComponent component;
-
+    private final JComponent component; 
+    
     public Canvas(World world) {
         this.world = world;
         component = new CanvasComponent();
@@ -39,6 +41,12 @@ public class Canvas {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            
+            RenderingHints rh = new RenderingHints(
+                    RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+           ((Graphics2D) g).setRenderingHints(rh);
+           
             RenderContext context = new RenderContext(world.getMainCamera(), 800, 800, g);
             for (Entity e : world.getEntities()) {
                 e.render(context);

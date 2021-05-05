@@ -7,17 +7,22 @@ import org.junit.jupiter.api.Test;
 class Vec3Test {
 
     @Test
-    void testDotVec3() {
+    void dot() {
 
         Vec3 u = new Vec3(1.0, 2.0, 3.0);
         Vec3 v = new Vec3(4.0, 5.0, 6.0);
 
-        assertTrue(u.dot(v) == 32.0);
-        assertTrue(v.dot(u) == 32.0);
+        assertEquals(u.dot(v), 32.0);
+        assertEquals(v.dot(u), 32.0);
+        
+        Vec3 ra = Vec3.rand();
+        Vec3 rb = Vec3.rand();
+        
+        assertEquals(ra.dot(rb), rb.dot(ra));
     }
 
     @Test
-    void testCrossVec3() {
+    void cross() {
 
         Vec3 u = new Vec3(2.0, 0.0, 1.0);
         Vec3 v = new Vec3(1.0, -1.0, 3.0);
@@ -26,7 +31,7 @@ class Vec3Test {
     }
 
     @Test
-    void testSumVec3() {
+    void sum() {
 
         Vec3 u = new Vec3(1.0, 2.0, 3.0);
         Vec3 v = new Vec3(4.0, 5.0, 6.0);
@@ -36,7 +41,7 @@ class Vec3Test {
     }
 
     @Test
-    void testMulDouble() {
+    void mul() {
 
         Vec3 vec = new Vec3(1.0, 2.0, 3.0);
         double val = 4.0;
