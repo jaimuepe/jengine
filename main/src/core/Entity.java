@@ -28,13 +28,14 @@ public abstract class Entity {
 
     public void render(RenderContext context) {
         for (Component c : components) {
-            if ((c.getFlags() & Component.Flags.DRAWABLE) != 0) {
+            if ((c.getFlags() & Component.Flags.RENDERABLE) != 0) {
                 c.render(context);
             }
         }
     }
 
     public void addComponent(Component component) {
+    	component.setOwner(this);
         components.add(component);
     }
 }

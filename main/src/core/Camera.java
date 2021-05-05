@@ -70,7 +70,7 @@ public class Camera extends Entity {
 
         Vec3 P = transform.getPosition();
         Vec3 D = P.minus(target).normalized();
-        Vec3 R = worldUp.cross(D).normalized();
+        Vec3 R = worldUp.cross(D);
         Vec3 U = D.cross(R);
 
         // @formatter:off
