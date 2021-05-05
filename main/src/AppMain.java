@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -8,10 +6,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFrame;
 
+import components.Renderer;
 import components.Updatable;
 import core.Camera;
 import core.Vec3;
 import core.World;
+import io.InputHandler;
 import shapes.Cube;
 import ui.Canvas;
 import util.UpdateContext;
@@ -31,26 +31,44 @@ public class AppMain {
         double aspectRatio = (double) WIDTH / HEIGHT;
 
         World world = new World();
-        InputHandler input = new InputHandler();
 
         Camera camera = new Camera(0.1, aspectRatio, 100.0f, 90.0f);
 
-        world.setMainCamera(camera);
-
-        Cube spinnyCube1 = new Cube();
-
-        spinnyCube1.transform.setPosition(new Vec3(0, 0, 10));
-        spinnyCube1.transform.setScale(new Vec3(1.0, 2.0, 3.0));
-        spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.0, 0.0));
-
-        spinnyCube1.addComponent(new Updatable("spinny") {
+        camera.addComponent(new Updatable("playerController") {
             @Override
             public void update(UpdateContext context) {
-                owner.transform.rotate(new Vec3(0.0, context.deltaTimeSeconds, 0.0));
+                if (context.world.getInputHandler().isKeyPressed(KeyEvent.VK_W)) {
+                    System.out.println("pressed");
+                }
+                if (context.world.getInputHandler().isKeyReleased(KeyEvent.VK_W)) {
+                    System.out.println("released");
+                }
             }
         });
 
+        InputHandler input = new InputHandler();
+
+        world.setMainCamera(camera);
+        world.setInputHandler(input);
+
+        Cube spinnyCube1 = new Cube();
+        Renderer r1 = spinnyCube1.getComponentUnsafe(Renderer.class);
+        r1.setColor(Color.RED);
+
+        spinnyCube1.transform.setPosition(new Vec3(0.3, 0.3, 3.0));
+        spinnyCube1.transform.setScale(new Vec3(0.1, 0.1, 0.5));
+        spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.8, 0.0));
+
         world.register(spinnyCube1);
+
+        Cube spinnyCube2 = new Cube();
+        spinnyCube2.transform.setPosition(new Vec3(0.2, 0.1, 0.8));
+        spinnyCube2.transform.setScale(new Vec3(0.1, 0.1, 0.1));
+        spinnyCube2.transform.setRotation(new Vec3(0.3, 0.3, 5));
+        Renderer r2 = spinnyCube2.getComponentUnsafe(Renderer.class);
+        r2.setColor(Color.BLUE);
+
+        world.register(spinnyCube2);
 
         Canvas canvas = new Canvas(world);
         canvas.setPreferredSize(WIDTH, HEIGHT);
@@ -82,7 +100,7 @@ public class AppMain {
                 lastTime = loopStartTime;
                 steps += deltaTime;
 
-                f.setTitle("FPS: " + (1000.0 / deltaTime));
+                // f.setTitle("FPS: " + (1000.0 / deltaTime));
 
                 input.update(context);
 
@@ -122,73 +140,3 @@ public class AppMain {
     }
 }
 
-class InputHandler {
-
-    class KeyState {
-
-        private long lastPressed;
-        private long lastReleased;
-
-        private final int keyCode;
-
-        public KeyState(int keyCode) {
-            this.keyCode = keyCode;
-        }
-    }
-
-    private long lastFrameTime;
-
-    private final KeyState[] keyStates = new KeyState[0xFF];
-
-    public InputHandler() {
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent ke) {
-
-                if (ke.getID() == KeyEvent.KEY_PRESSED || ke.getID() == KeyEvent.KEY_RELEASED) {
-
-                    long when = ke.getWhen();
-                    int keyCode = ke.getKeyCode();
-
-                    if (keyStates[keyCode] == null) {
-                        keyStates[keyCode] = new KeyState(keyCode);
-                    }
-
-                    if (ke.getID() == KeyEvent.KEY_PRESSED) {
-                        keyStates[keyCode].lastPressed = when;
-                    } else {
-                        keyStates[keyCode].lastReleased = when;
-                    }
-                }
-
-                return false;
-            }
-        });
-    }
-
-    public boolean isKeyReleased(int keyCode) {
-
-        if (keyStates[keyCode] == null) {
-            return false;
-        }
-
-        return keyStates[keyCode].lastReleased > keyStates[keyCode].lastPressed
-                && keyStates[keyCode].lastReleased > lastFrameTime;
-    }
-
-    public boolean isKeyPressed(int keyCode) {
-
-        if (keyStates[keyCode] == null) {
-            return false;
-        }
-
-        return keyStates[keyCode].lastPressed > keyStates[keyCode].lastReleased
-                && keyStates[keyCode].lastPressed > lastFrameTime;
-    }
-
-    public void update(UpdateContext context) {
-        this.lastFrameTime = context.time;
-    }
-}

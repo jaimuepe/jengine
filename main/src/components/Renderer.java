@@ -1,19 +1,22 @@
 package components;
 
-import core.Mat4;
-import core.MeshData;
-import core.Transform;
-import core.Vec3;
-import util.MyGraphics;
-import util.RenderContext;
+import core.*;
+import graphics.RenderContext;
+
+import java.awt.*;
 
 public class Renderer extends Component {
 
     private MeshData meshData;
+    private Color color;
 
     public Renderer() {
         super("renderer");
         setFlag(Flags.RENDERABLE);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public void setData(MeshData meshData) {
@@ -49,9 +52,7 @@ public class Renderer extends Component {
                 continue;
             }
 
-            MyGraphics.drawLine(context, p1, p2);
-            MyGraphics.drawLine(context, p2, p3);
-            MyGraphics.drawLine(context, p3, p1);
+            context.queue.add(new Triangle(p1, p2, p3, color));
         }
     }
 }

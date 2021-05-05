@@ -1,7 +1,7 @@
 package components;
 
 import core.Entity;
-import util.RenderContext;
+import graphics.RenderContext;
 import util.UpdateContext;
 
 public abstract class Component {

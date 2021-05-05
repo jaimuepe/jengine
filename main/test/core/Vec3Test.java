@@ -14,10 +14,10 @@ class Vec3Test {
 
         assertEquals(u.dot(v), 32.0);
         assertEquals(v.dot(u), 32.0);
-        
+
         Vec3 ra = Vec3.rand();
         Vec3 rb = Vec3.rand();
-        
+
         assertEquals(ra.dot(rb), rb.dot(ra));
     }
 
@@ -27,7 +27,9 @@ class Vec3Test {
         Vec3 u = new Vec3(2.0, 0.0, 1.0);
         Vec3 v = new Vec3(1.0, -1.0, 3.0);
 
-        assertTrue(u.cross(v).equals(new Vec3(1.0, -5.0, -2.0)));
+        assertEquals(
+                u.cross(v),
+                new Vec3(1.0, -5.0, -2.0));
     }
 
     @Test

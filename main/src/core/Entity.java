@@ -1,11 +1,12 @@
 package core;
 
 import components.Component;
-import util.RenderContext;
+import graphics.RenderContext;
 import util.UpdateContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Entity {
 
@@ -35,7 +36,20 @@ public abstract class Entity {
     }
 
     public void addComponent(Component component) {
-    	component.setOwner(this);
+        component.setOwner(this);
         components.add(component);
+    }
+
+    public <T extends Component> Optional<T> getComponent(Class<T> componentClass) {
+        for (Component c : components) {
+            if (c.getClass().isAssignableFrom(componentClass)) {
+                return Optional.of((T) c);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public <T extends Component> T getComponentUnsafe(Class<T> componentClass) {
+        return getComponent(componentClass).get();
     }
 }
