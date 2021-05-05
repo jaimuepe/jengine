@@ -52,6 +52,7 @@ public class Renderer extends Component {
             Vec3 cameraForward = new Vec3(0.0, 0.0, -1.0);
             double d = cameraForward.dot(n);
 
+            // TODO this make no sense, should be the other way
             if (d < 0.08) {
                 continue;
             }
