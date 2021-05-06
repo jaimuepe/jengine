@@ -11,7 +11,8 @@ public class World {
 
     private Camera mainCamera;
     private InputHandler inputHandler;
-
+    private DebugConsole console;
+    
     public World() {
         entities = new ArrayList<>();
     }
@@ -26,6 +27,14 @@ public class World {
 
     public InputHandler getInputHandler() {
         return inputHandler;
+    }
+    
+    public void setConsole(DebugConsole console) {
+    	this.console = console;
+    }
+    
+    public DebugConsole getConsole() {
+    	return console;
     }
 
     public void setMainCamera(Camera camera) {

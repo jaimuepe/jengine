@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import components.Renderer;
 import components.Updatable;
 import core.Camera;
+import core.DebugConsole;
+import core.Transform;
 import core.Vec3;
 import core.World;
 import io.InputHandler;
@@ -32,22 +34,45 @@ public class AppMain {
 
         World world = new World();
 
-        Camera camera = new Camera(0.1, aspectRatio, 100.0f, 90.0f);
+        DebugConsole console = new DebugConsole();
+        
+        Camera camera = new Camera(0.1, 300.0, aspectRatio, 90.0f);
+        
+		camera.addComponent(new Updatable("playerController") {
+			
+			double movementSpeed = 1.0f;
+			
+			@Override
+			public void update(UpdateContext context) {
 
-        camera.addComponent(new Updatable("playerController") {
-            @Override
-            public void update(UpdateContext context) {
-                if (context.world.getInputHandler().isKeyPressed(KeyEvent.VK_W)) {
-                    System.out.println("pressed");
-                }
-                if (context.world.getInputHandler().isKeyReleased(KeyEvent.VK_W)) {
-                    System.out.println("released");
-                }
-            }
-        });
+				if (context.world.getInputHandler().isKey(KeyEvent.VK_W)) {
+					Vec3 fwd = owner.transform.forward();
+					owner.transform.translate(fwd.mul(movementSpeed * context.deltaTimeSeconds));
+				}
 
+				if (context.world.getInputHandler().isKey(KeyEvent.VK_S)) {
+					Vec3 bwd = owner.transform.backward();
+					owner.transform.translate(bwd.mul(movementSpeed * context.deltaTimeSeconds));
+				}
+
+				if (context.world.getInputHandler().isKey(KeyEvent.VK_A)) {
+					Vec3 left = owner.transform.left();
+					owner.transform.translate(left.mul(movementSpeed * context.deltaTimeSeconds));
+				}
+
+				if (context.world.getInputHandler().isKey(KeyEvent.VK_D)) {
+					Vec3 right = owner.transform.right();
+					owner.transform.translate(right.mul(movementSpeed * context.deltaTimeSeconds));
+				}
+			}
+		});
+		
+		console.addPrintable("Camera pos: ", () -> camera.transform.getPosition());
+		console.addPrintable("Camera rot: ", () -> camera.transform.getRotation());
+		
         InputHandler input = new InputHandler();
 
+        world.setConsole(console);
         world.setMainCamera(camera);
         world.setInputHandler(input);
 
@@ -55,7 +80,7 @@ public class AppMain {
         Renderer r1 = spinnyCube1.getComponentUnsafe(Renderer.class);
         r1.setColor(Color.RED);
 
-        spinnyCube1.transform.setPosition(new Vec3(0.3, 0.3, 3.0));
+        spinnyCube1.transform.setPosition(new Vec3(0.3, 0.3, 0.0));
         spinnyCube1.transform.setScale(new Vec3(0.1, 0.1, 0.5));
         spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.8, 0.0));
 
@@ -100,14 +125,14 @@ public class AppMain {
                 lastTime = loopStartTime;
                 steps += deltaTime;
 
-                // f.setTitle("FPS: " + (1000.0 / deltaTime));
+//                 f.setTitle("FPS: " + (1000.0 / deltaTime));
 
                 input.update(context);
 
-                while (steps >= UPDATE_TARGET_FRAME_TIME) {
-                    update(context);
-                    steps -= UPDATE_TARGET_FRAME_TIME;
-                }
+//                while (steps >= UPDATE_TARGET_FRAME_TIME) {
+				update(context);
+//                    steps -= UPDATE_TARGET_FRAME_TIME;
+//                }
 
                 canvas.draw();
 

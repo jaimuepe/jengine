@@ -3,6 +3,7 @@ package ui;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.swing.JComponent;
 
@@ -61,6 +62,13 @@ public class Canvas {
             triangles.forEach(t -> drawTriangle(context, t));
 
             context.queue.clear();
+            
+            List<String> debugMessages = world.getConsole().getPrintableMessages();
+			if (debugMessages.size() > 0) {
+				for (int i = 0; i < debugMessages.size(); ++i) {
+					g.drawString(debugMessages.get(i), 10, 15 + 20 * i);
+				}
+			}
         }
 
         private void drawTriangle(RenderContext context, Triangle tri) {

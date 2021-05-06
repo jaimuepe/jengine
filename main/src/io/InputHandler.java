@@ -19,6 +19,7 @@ public class InputHandler {
         }
     }
 
+    private long currentFrameTime;
     private long lastFrameTime;
 
     private final KeyState[] keyStates = new KeyState[0xFF];
@@ -37,9 +38,13 @@ public class InputHandler {
                 }
 
                 if (ke.getID() == KeyEvent.KEY_PRESSED) {
-                    keyStates[keyCode].lastPressed = when;
+                	if (!isKey(keyCode)) {
+                		keyStates[keyCode].lastPressed = when;
+                	}
                 } else {
-                    keyStates[keyCode].lastReleased = when;
+                	if (isKey(keyCode)) {
+                		keyStates[keyCode].lastReleased = when;
+                	}
                 }
             }
 
@@ -51,33 +56,35 @@ public class InputHandler {
 
         if (keyStates[keyCode] == null) {
             return false;
-        }
+		}
 
-        return keyStates[keyCode].lastReleased > keyStates[keyCode].lastPressed
-                && keyStates[keyCode].lastReleased > lastFrameTime;
-    }
+		return keyStates[keyCode].lastReleased > keyStates[keyCode].lastPressed
+				&& keyStates[keyCode].lastReleased >= lastFrameTime
+				&& keyStates[keyCode].lastReleased < currentFrameTime;
+	}
 
     public boolean isKeyPressed(int keyCode) {
 
         if (keyStates[keyCode] == null) {
             return false;
-        }
+		}
 
-        return keyStates[keyCode].lastPressed > keyStates[keyCode].lastReleased
-                && keyStates[keyCode].lastPressed > lastFrameTime;
-    }
+		return keyStates[keyCode].lastPressed > keyStates[keyCode].lastReleased
+				&& keyStates[keyCode].lastPressed >= lastFrameTime && keyStates[keyCode].lastPressed < currentFrameTime;
+	}
 
-    public boolean isKeyHold(int keyCode) {
+	public boolean isKey(int keyCode) {
 
-        if (keyStates[keyCode] == null) {
-            return false;
-        }
+		if (keyStates[keyCode] == null) {
+			return false;
+		}
 
-        return keyStates[keyCode].lastPressed < lastFrameTime
-                && keyStates[keyCode].lastReleased < lastFrameTime;
-    }
+		return keyStates[keyCode].lastPressed > keyStates[keyCode].lastReleased
+				&& keyStates[keyCode].lastPressed < lastFrameTime;
+	}
 
     public void update(UpdateContext context) {
-        this.lastFrameTime = context.time;
+    	this.currentFrameTime = context.time;
+        this.lastFrameTime = context.lastFrameTime;
     }
 }
