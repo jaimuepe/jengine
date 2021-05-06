@@ -1,58 +1,89 @@
 package components;
 
-import core.*;
-import graphics.RenderContext;
+import java.awt.Color;
+import java.util.Optional;
 
-import java.awt.*;
+import core.Mat4;
+import core.MeshData;
+import core.Triangle;
+import core.Vec3;
+import core.Vec4;
+import graphics.RenderContext;
 
 public class Renderer extends Component {
 
-    private MeshData meshData;
-    private Color color;
+	private MeshData meshData;
+	private Color color;
 
-    public Renderer() {
-        super("renderer");
-        setFlag(Flags.RENDERABLE);
-    }
+	public Renderer() {
+		super("renderer");
+		setFlag(Flags.RENDERABLE);
+	}
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
+	public void setColor(Color color) {
+		this.color = color;
+	}
 
-    public void setData(MeshData meshData) {
-        this.meshData = meshData;
-    }
+	public void setData(MeshData meshData) {
+		this.meshData = meshData;
+	}
 
-    @Override
-    public void render(RenderContext context) {
+	@Override
+	public void render(RenderContext context) {
 
-        if (meshData == null) {
-            return;
-        }
+		if (meshData == null) {
+			return;
+		}
 
-        // v' = v * M * V * P
+		// v' = P * V * M * v
 
-        Mat4 VP = context.camera.getVP();
-        Mat4 M = getOwner().transform.getModelMatrix();
+		Mat4 PV = context.camera.getPV();
+		Mat4 M = getOwner().transform.getModelMatrix();
 
-        Mat4 MVP = M.mul(VP);
+		Mat4 PVM = PV.mul(M);
 
-        Vec3[] verts = Transform.transformPoints(meshData.vertices, MVP);
+//		Vec3[] verts = Transform.transformPoints(meshData.vertices, PVM);
 
-        for (int i = 0; i < meshData.indices.length; i += 3) {
+		for (int i = 0; i < meshData.indices.length; i += 3) {
 
-            Vec3 p1 = verts[meshData.indices[i]];
-            Vec3 p2 = verts[meshData.indices[i + 1]];
-            Vec3 p3 = verts[meshData.indices[i + 2]];
+			Optional<Vec3> optP1 = transformPoint(meshData.vertices[meshData.indices[i]], PVM);
+			Optional<Vec3> optP2 = transformPoint(meshData.vertices[meshData.indices[i + 1]], PVM);
+			Optional<Vec3> optP3 = transformPoint(meshData.vertices[meshData.indices[i + 2]], PVM);
 
-            Vec3 edgeA = p2.minus(p1).normalized();
-            Vec3 edgeB = p3.minus(p1).normalized();
+			if (!optP1.isPresent() || !optP2.isPresent() || !optP3.isPresent()) {
+				continue;
+			}
 
-            if ((edgeA.x * edgeB.y - edgeA.y * edgeB.x) > 0.0) {
-                continue;
-            }
+			Vec3 p1 = optP1.get();
+			Vec3 p2 = optP2.get();
+			Vec3 p3 = optP3.get();
 
-            context.queue.add(new Triangle(p1, p2, p3, color));
-        }
-    }
+			Vec3 edgeA = p2.minus(p1).normalized();
+			Vec3 edgeB = p3.minus(p1).normalized();
+
+			if ((edgeA.x * edgeB.y - edgeA.y * edgeB.x) > 0.0) {
+				continue;
+			}
+
+			context.queue.add(new Triangle(p1, p2, p3, color));
+		}
+	}
+
+	private Optional<Vec3> transformPoint(Vec3 point, Mat4 mat) {
+
+		Vec4 v = mat.mul(new Vec4(point, 1.0));
+		
+		double w = v.w;
+		
+		if (v.z > w || v.z < -w) {
+			return Optional.empty();
+		}
+
+		Vec3 v3 = v.toVec3();
+		v3.x /= w;
+		v3.y /= w;
+		v3.z /= w;
+
+		return Optional.of(v3);
+	}
 }

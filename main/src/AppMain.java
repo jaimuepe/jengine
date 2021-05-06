@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -10,7 +11,6 @@ import components.Renderer;
 import components.Updatable;
 import core.Camera;
 import core.DebugConsole;
-import core.Transform;
 import core.Vec3;
 import core.World;
 import io.InputHandler;
@@ -36,7 +36,7 @@ public class AppMain {
 
         DebugConsole console = new DebugConsole();
         
-        Camera camera = new Camera(0.1, 300.0, aspectRatio, 90.0f);
+        Camera camera = new Camera(0.1, 100.0, aspectRatio, 90.0f);
         
 		camera.addComponent(new Updatable("playerController") {
 			

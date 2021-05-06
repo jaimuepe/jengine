@@ -6,7 +6,7 @@ public class Camera extends Entity {
 
 	private Mat4 _P;
 	private Mat4 _V;
-	private Mat4 _VP;
+	private Mat4 _PV;
 
 	private boolean pDirty;
 	private boolean vDirty;
@@ -26,8 +26,8 @@ public class Camera extends Entity {
 		pDirty = true;
 		vDirty = true;
 
-		transform.setRotation(new Vec3(0.0, Math.PI, 0.0));
-		transform.setPosition(new Vec3(0.0, 0.0, -3.0));
+//		transform.setRotation(new Vec3(0.0, Math.PI, 0.0));
+		transform.setPosition(new Vec3(0.0, 0.0, 3.0));
 
 		transform.addListener(new Listener() {
 			@Override
@@ -51,7 +51,7 @@ public class Camera extends Entity {
 		return new Mat4(_V);
 	}
 
-	public Mat4 getVP() {
+	public Mat4 getPV() {
 
 		boolean pvDirty = false;
 
@@ -66,10 +66,10 @@ public class Camera extends Entity {
 		}
 
 		if (pvDirty) {
-			_VP = _V.mul(_P);
+			_PV = _P.mul(_V);
 		}
 
-		return _VP;
+		return _PV;
 	}
 
 	private void calculateViewMatrix() {
@@ -86,8 +86,22 @@ public class Camera extends Entity {
 				R.x, R.y, R.z, 0.0,
 				U.x, U.y, U.z, 0.0,
 				D.x, D.y, D.z, 0.0,
-				P.x, P.y, P.z, 1.0
-				);
+				0.0, 0.0, 0.0, 1.0
+				).mul(
+			new Mat4(
+				1.0, 0.0, 0.0, -P.x,
+				0.0, 1.0, 0.0, -P.y,
+				0.0, 0.0, 1.0, -P.z,
+				0.0, 0.0, 0.0, 1.0
+			));
+		
+//		_V = new Mat4(
+//			R.x, U.x, D.x, -P.x,
+//			R.y, U.y, D.y, -P.y,
+//			R.z, U.z, D.z, -P.z,
+//			0.0, 0.0, 0.0, 1.0
+//		);
+		
         // @formatter:on
 
 		vDirty = false;
@@ -95,14 +109,14 @@ public class Camera extends Entity {
 
 	private void calculatePerspectiveMatrix() {
 
-		double invTan = 1.0 / Math.tan(fov * 0.5 * Math.PI / 180.0);
+		double S = 1.0 / Math.tan(fov * 0.5 * Math.PI / 180.0);
 
 		// @formatter:off
         _P = new Mat4(
-        		invTan, 0.0, 0.0, 0.0,
-                0.0, invTan, 0.0, 0.0,
-                0.0, 0.0, -zFar / (zFar - zNear), -1.0,
-                0.0, 0.0, -zFar * zNear / (zFar - zNear), 0.0
+        		S, 0.0, 0.0, 0.0,
+                0.0, S, 0.0, 0.0,
+                0.0, 0.0, -(zFar + zNear) / (zFar - zNear),  -2.0 * zFar * zNear / (zFar - zNear),
+                0.0, 0.0, -1, 0.0
         );
         // @formatter:on
 
