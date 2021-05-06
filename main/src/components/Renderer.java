@@ -42,15 +42,23 @@ public class Renderer extends Component {
 
 		Mat4 PVM = PV.mul(M);
 
-//		Vec3[] verts = Transform.transformPoints(meshData.vertices, PVM);
-
 		for (int i = 0; i < meshData.indices.length; i += 3) {
 
 			Optional<Vec3> optP1 = transformPoint(meshData.vertices[meshData.indices[i]], PVM);
+
+			if (!optP1.isPresent()) {
+				continue;
+			}
+
 			Optional<Vec3> optP2 = transformPoint(meshData.vertices[meshData.indices[i + 1]], PVM);
+
+			if (!optP2.isPresent()) {
+				continue;
+			}
+
 			Optional<Vec3> optP3 = transformPoint(meshData.vertices[meshData.indices[i + 2]], PVM);
 
-			if (!optP1.isPresent() || !optP2.isPresent() || !optP3.isPresent()) {
+			if (!optP3.isPresent()) {
 				continue;
 			}
 
@@ -72,9 +80,9 @@ public class Renderer extends Component {
 	private Optional<Vec3> transformPoint(Vec3 point, Mat4 mat) {
 
 		Vec4 v = mat.mul(new Vec4(point, 1.0));
-		
+
 		double w = v.w;
-		
+
 		if (v.z > w || v.z < -w) {
 			return Optional.empty();
 		}

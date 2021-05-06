@@ -80,20 +80,21 @@ public class AppMain {
         Renderer r1 = spinnyCube1.getComponentUnsafe(Renderer.class);
         r1.setColor(Color.RED);
 
-        spinnyCube1.transform.setPosition(new Vec3(0.3, 0.3, 0.0));
-        spinnyCube1.transform.setScale(new Vec3(0.1, 0.1, 0.5));
-        spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.8, 0.0));
+//        spinnyCube1.transform.setPosition(new Vec3(0.0, 0.0, 0.0));
+//        spinnyCube1.transform.setScale(new Vec3(0.1, 0.1, 0.5));
+//        spinnyCube1.transform.setRotation(new Vec3(-0.3, 0.8, 0.0));
 
         world.register(spinnyCube1);
 
         Cube spinnyCube2 = new Cube();
-        spinnyCube2.transform.setPosition(new Vec3(0.2, 0.1, 0.8));
-        spinnyCube2.transform.setScale(new Vec3(0.1, 0.1, 0.1));
-        spinnyCube2.transform.setRotation(new Vec3(0.3, 0.3, 5));
+//        spinnyCube2.transform.setPosition(new Vec3(0.0, 0.0, -1.0));
+//        spinnyCube2.transform.setScale(new Vec3(0.1, 0.1, 0.1));
+//        spinnyCube2.transform.setRotation(new Vec3(0.3, 0.3, 5));
+        
         Renderer r2 = spinnyCube2.getComponentUnsafe(Renderer.class);
         r2.setColor(Color.BLUE);
 
-        world.register(spinnyCube2);
+//        world.register(spinnyCube2);
 
         Canvas canvas = new Canvas(world);
         canvas.setPreferredSize(WIDTH, HEIGHT);

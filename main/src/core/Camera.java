@@ -13,20 +13,20 @@ public class Camera extends Entity {
 
 	private double zNear;
 	private double zFar;
-	private double aspectRatio;
+	private double aspect;
 	private double fov;
 
-	public Camera(double zNear, double zFar, double aspectRatio, double fov) {
+	public Camera(double zNear, double zFar, double aspect, double fov) {
 
 		this.zNear = zNear;
 		this.zFar = zFar;
-		this.aspectRatio = aspectRatio;
+		this.aspect = aspect;
 		this.fov = fov;
 
 		pDirty = true;
 		vDirty = true;
 
-//		transform.setRotation(new Vec3(0.0, Math.PI, 0.0));
+		transform.setRotation(new Vec3(0.0, Math.PI, 0.0));
 		transform.setPosition(new Vec3(0.0, 0.0, 3.0));
 
 		transform.addListener(new Listener() {
@@ -77,7 +77,7 @@ public class Camera extends Entity {
 		Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);
 
 		Vec3 P = transform.getPosition();
-		Vec3 D = transform.forward();
+		Vec3 D = transform.forward().neg();
 		Vec3 R = worldUp.cross(D);
 		Vec3 U = D.cross(R);
 
@@ -109,12 +109,12 @@ public class Camera extends Entity {
 
 	private void calculatePerspectiveMatrix() {
 
-		double S = 1.0 / Math.tan(fov * 0.5 * Math.PI / 180.0);
+		double e = 1.0 / Math.tan(fov * 0.5 * Math.PI / 180.0);
 
 		// @formatter:off
         _P = new Mat4(
-        		S, 0.0, 0.0, 0.0,
-                0.0, S, 0.0, 0.0,
+        		e / aspect, 0.0, 0.0, 0.0,
+                0.0, e, 0.0, 0.0,
                 0.0, 0.0, -(zFar + zNear) / (zFar - zNear),  -2.0 * zFar * zNear / (zFar - zNear),
                 0.0, 0.0, -1, 0.0
         );
