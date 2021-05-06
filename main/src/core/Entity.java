@@ -40,7 +40,8 @@ public abstract class Entity {
         components.add(component);
     }
 
-    public <T extends Component> Optional<T> getComponent(Class<T> componentClass) {
+    @SuppressWarnings("unchecked")
+	public <T extends Component> Optional<T> getComponent(Class<T> componentClass) {
         for (Component c : components) {
             if (c.getClass().isAssignableFrom(componentClass)) {
                 return Optional.of((T) c);
