@@ -59,8 +59,17 @@ public class Vec3 {
 		return new Vec3(x * other.x, y * other.y, z * other.z);
 	}
 
+	public Vec3 normalized() {
+		double len = Math.sqrt(x * x + y * y + z * z);
+		return new Vec3(x / len, y / len, z / len);
+	}
+
 	public static double dot(Vec3 u, Vec3 v) {
 		return u.x * v.x + u.y * v.y + u.z * v.z;
+	}
+	
+	public static Vec3 one() {
+		return new Vec3(1.0, 1.0, 1.0);
 	}
 
 	public static Vec3 sum(Vec3 u, Vec3 v) {
@@ -88,11 +97,6 @@ public class Vec3 {
 		double z = u.x * v.y - u.y * v.x;
 
 		return new Vec3(x, y, z);
-	}
-
-	public Vec3 normalized() {
-		double len = Math.sqrt(x * x + y * y + z * z);
-		return new Vec3(x / len, y / len, z / len);
 	}
 
 	public static Vec3 rand() {

@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 
 import core.AmbientLight;
 import core.DirectionalLight;
+import core.Game;
 import core.LightInfo;
 import core.Triangle;
 import core.Vec3;
@@ -22,11 +23,11 @@ import graphics.RenderContext;
 
 public class Canvas {
 
-	private final World world;
+	private final Game game;
 	private final JComponent component;
 
-	public Canvas(World world) {
-		this.world = world;
+	public Canvas(Game game) {
+		this.game = game;
 		component = new CanvasComponent();
 	}
 
@@ -54,16 +55,25 @@ public class Canvas {
 
 			super.paintComponent(g);
 
+			renderEntities(g);
+
+			renderDebugInfo(g);
+		}
+
+		private void renderEntities(Graphics g) {
+
 			Graphics2D g2 = (Graphics2D) g;
 
 			RenderingHints rh = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING,
 					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			g2.setRenderingHints(rh);
 
+			World world = game.world;
+
 			LightInfo lightInfo = new LightInfo(new AmbientLight[] { world.getAmbientLight() },
 					new DirectionalLight[] { world.getDirectionalLight() });
 
-			RenderContext context = new RenderContext(world.getMainCamera(), lightInfo, 800, 800, g2);
+			RenderContext context = new RenderContext(world.getMainCamera(), lightInfo, getWidth(), getHeight(), g2);
 
 			world.getEntities().forEach(e -> e.render(context));
 
@@ -73,6 +83,11 @@ public class Canvas {
 			triangles.forEach(t -> drawTriangle(context, t));
 
 			context.queue.clear();
+		}
+
+		private void renderDebugInfo(Graphics g) {
+
+			World world = game.world;
 
 			List<String> debugMessages = world.getConsole().getPrintableMessages();
 			if (debugMessages.size() > 0) {
@@ -137,7 +152,7 @@ public class Canvas {
 			}
 
 			Vec3 finalColor = lightColor.scale(tri.color);
-			
+
 			// @formatter:off
 			return new Color(
 					(float) finalColor.x,

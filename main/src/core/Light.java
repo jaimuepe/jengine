@@ -1,7 +1,5 @@
 package core;
 
-import java.awt.Color;
-
 public abstract class Light {
 
 	public final Vec3 color;

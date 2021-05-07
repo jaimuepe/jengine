@@ -1,7 +1,5 @@
 package core;
 
-import java.awt.Color;
-
 public class DirectionalLight extends Light {
 
 	public final Vec3 direction;

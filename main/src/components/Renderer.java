@@ -1,6 +1,5 @@
 package components;
 
-import java.awt.Color;
 import java.util.Optional;
 
 import core.Mat4;
@@ -13,7 +12,7 @@ import graphics.RenderContext;
 public class Renderer extends Component {
 
 	private MeshData meshData;
-	private Vec3 color;
+	private Vec3 color = Vec3.one();
 
 	public Renderer() {
 		super("renderer");

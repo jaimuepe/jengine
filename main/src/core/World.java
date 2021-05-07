@@ -24,15 +24,15 @@ public class World {
 		entities.add(entity);
 	}
 
-	public void setInputHandler(InputHandler inputHandler) {
-		this.inputHandler = inputHandler;
-	}
-
 	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
 
-	public void setConsole(DebugConsole console) {
+	protected void setInputHandler(InputHandler inputHandler) {
+		this.inputHandler = inputHandler;
+	}
+	
+	protected void setConsole(DebugConsole console) {
 		this.console = console;
 	}
 

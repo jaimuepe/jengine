@@ -3,7 +3,6 @@ package graphics;
 import java.awt.Graphics2D;
 
 import core.Camera;
-import core.DirectionalLight;
 import core.LightInfo;
 
 public class RenderContext {

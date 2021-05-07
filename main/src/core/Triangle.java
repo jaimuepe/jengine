@@ -1,7 +1,5 @@
 package core;
 
-import java.awt.*;
-
 public class Triangle {
 
     public final Vec3 p1;

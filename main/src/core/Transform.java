@@ -92,7 +92,7 @@ public class Transform {
 		position.z += t.z;
 
 		mDirty = true;
-		
+
 		listeners.forEach(l -> l.onPositionChange(old, position));
 	}
 
@@ -103,7 +103,7 @@ public class Transform {
 		scale.x *= s.x;
 		scale.y *= s.y;
 		scale.z *= s.z;
-		
+
 		mDirty = true;
 
 		listeners.forEach(l -> l.onScaleChange(old, position));
@@ -116,7 +116,7 @@ public class Transform {
 		rotation.x += r.x;
 		rotation.y += r.y;
 		rotation.z += r.z;
-		
+
 		rDirty = true;
 		mDirty = true;
 
@@ -130,9 +130,9 @@ public class Transform {
 		position.x = pos.x;
 		position.y = pos.y;
 		position.z = pos.z;
-		
+
 		mDirty = true;
-		
+
 		listeners.forEach(l -> l.onPositionChange(old, position));
 	}
 
@@ -143,9 +143,9 @@ public class Transform {
 		scale.x = s.x;
 		scale.y = s.y;
 		scale.z = s.z;
-		
+
 		mDirty = true;
-		
+
 		listeners.forEach(l -> l.onScaleChange(old, scale));
 	}
 
@@ -159,7 +159,7 @@ public class Transform {
 
 		rDirty = true;
 		mDirty = true;
-		
+
 		listeners.forEach(l -> l.onRotationChange(old, rotation));
 	}
 
@@ -179,9 +179,9 @@ public class Transform {
 
 		_M = Mat4.identity();
 
-		_M = translate(_M, position);
-		_M = getRotationMatrix().mul(_M);
 		_M = scale(_M, scale);
+		_M = getRotationMatrix().mul(_M);
+		_M = translate(_M, position);
 
 		mDirty = false;
 	}
@@ -199,25 +199,22 @@ public class Transform {
 
 	public static Mat4 translate(Mat4 mat, Vec3 t) {
 		// @formatter:off
-		return mat.mul(
-				new Mat4(
-					1.0, 0.0, 0.0, t.x,
-					0.0, 1.0, 0.0, t.y,
-					0.0, 0.0, 1.0, t.z,
-					0.0, 0.0, 0.0, 1.0)
-				);
+		return new Mat4(
+				1.0, 0.0, 0.0, t.x,
+				0.0, 1.0, 0.0, t.y,
+				0.0, 0.0, 1.0, t.z,
+				0.0, 0.0, 0.0, 1.0
+			).mul(mat);
 		// @formatter:on
 	}
 
 	public static Mat4 scale(Mat4 mat, Vec3 s) {
 		// @formatter:off
-		return mat.mul(
-				new Mat4(
-					s.x, 0.0, 0.0, 0.0,
-					0.0, s.y, 0.0, 0.0,
-					0.0, 0.0, s.z, 0.0,
-					0.0, 0.0, 0.0, 1.0)
-				);
+		return new Mat4(
+			s.x, 0.0, 0.0, 0.0,
+			0.0, s.y, 0.0, 0.0,
+			0.0, 0.0, s.z, 0.0,
+			0.0, 0.0, 0.0, 1.0).mul(mat);
 		// @formatter:on
 	}
 
@@ -263,6 +260,6 @@ public class Transform {
 			throw new IllegalArgumentException("Undefined axis");
 		}
 
-		return mat.mul(tmp);
+		return tmp.mul(mat);
 	}
 }
