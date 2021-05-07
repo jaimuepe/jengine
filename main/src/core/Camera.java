@@ -77,7 +77,7 @@ public class Camera extends Entity {
 		Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);
 
 		Vec3 P = transform.getPosition();
-		Vec3 D = transform.forward().neg();
+		Vec3 D = transform.back();
 		Vec3 R = worldUp.cross(D);
 		Vec3 U = D.cross(R);
 
@@ -89,19 +89,11 @@ public class Camera extends Entity {
 				0.0, 0.0, 0.0, 1.0
 				).mul(
 			new Mat4(
-				1.0, 0.0, 0.0, -P.x,
-				0.0, 1.0, 0.0, -P.y,
-				0.0, 0.0, 1.0, -P.z,
+				1.0, 0.0, 0.0, P.x,
+				0.0, 1.0, 0.0, P.y,
+				0.0, 0.0, 1.0, P.z,
 				0.0, 0.0, 0.0, 1.0
 			));
-		
-//		_V = new Mat4(
-//			R.x, U.x, D.x, -P.x,
-//			R.y, U.y, D.y, -P.y,
-//			R.z, U.z, D.z, -P.z,
-//			0.0, 0.0, 0.0, 1.0
-//		);
-		
         // @formatter:on
 
 		vDirty = false;
@@ -109,14 +101,14 @@ public class Camera extends Entity {
 
 	private void calculatePerspectiveMatrix() {
 
-		double e = 1.0 / Math.tan(fov * 0.5 * Math.PI / 180.0);
+		double e = 1.0 / Math.tan(Math.toRadians(fov) * 0.5);
 
 		// @formatter:off
         _P = new Mat4(
         		e / aspect, 0.0, 0.0, 0.0,
                 0.0, e, 0.0, 0.0,
-                0.0, 0.0, -(zFar + zNear) / (zFar - zNear),  -2.0 * zFar * zNear / (zFar - zNear),
-                0.0, 0.0, -1, 0.0
+                0.0, 0.0, -(zFar + zNear) / (zNear - zFar),  -2.0 * zFar * zNear / (zFar - zNear),
+                0.0, 0.0, 1.0, 0.0
         );
         // @formatter:on
 

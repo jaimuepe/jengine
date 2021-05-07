@@ -60,27 +60,27 @@ public class Transform {
 	}
 
 	public Vec3 up() {
-		return getRotationMatrix().mul(new Vec4(0.0, 1.0, 0.0, 0.0)).toVec3();
+		return getRotationMatrix().mul(Vec4.up()).toVec3();
 	}
 
 	public Vec3 down() {
-		return getRotationMatrix().mul(new Vec4(0.0, -1.0, 0.0, 0.0)).toVec3();
+		return getRotationMatrix().mul(Vec4.down()).toVec3();
 	}
 
-	public Vec3 forward() {
-		return getRotationMatrix().mul(new Vec4(0.0, 0.0, 1.0, 0.0)).toVec3();
+	public Vec3 front() {
+		return getRotationMatrix().mul(Vec4.front()).toVec3();
 	}
 
-	public Vec3 backward() {
-		return getRotationMatrix().mul(new Vec4(0.0, 0.0, -1.0, 0.0)).toVec3();
+	public Vec3 back() {
+		return getRotationMatrix().mul(Vec4.back()).toVec3();
 	}
 
 	public Vec3 right() {
-		return getRotationMatrix().mul(new Vec4(1.0, 0.0, 0.0, 0.0)).toVec3();
+		return getRotationMatrix().mul(Vec4.right()).toVec3();
 	}
 
 	public Vec3 left() {
-		return getRotationMatrix().mul(new Vec4(-1.0, 0.0, 0.0, 0.0)).toVec3();
+		return getRotationMatrix().mul(Vec4.left()).toVec3();
 	}
 
 	public void translate(Vec3 t) {
@@ -91,6 +91,8 @@ public class Transform {
 		position.y += t.y;
 		position.z += t.z;
 
+		mDirty = true;
+		
 		listeners.forEach(l -> l.onPositionChange(old, position));
 	}
 
@@ -101,6 +103,8 @@ public class Transform {
 		scale.x *= s.x;
 		scale.y *= s.y;
 		scale.z *= s.z;
+		
+		mDirty = true;
 
 		listeners.forEach(l -> l.onScaleChange(old, position));
 	}
@@ -112,8 +116,9 @@ public class Transform {
 		rotation.x += r.x;
 		rotation.y += r.y;
 		rotation.z += r.z;
-
+		
 		rDirty = true;
+		mDirty = true;
 
 		listeners.forEach(l -> l.onRotationChange(old, rotation));
 	}
@@ -125,7 +130,9 @@ public class Transform {
 		position.x = pos.x;
 		position.y = pos.y;
 		position.z = pos.z;
-
+		
+		mDirty = true;
+		
 		listeners.forEach(l -> l.onPositionChange(old, position));
 	}
 
@@ -136,7 +143,9 @@ public class Transform {
 		scale.x = s.x;
 		scale.y = s.y;
 		scale.z = s.z;
-
+		
+		mDirty = true;
+		
 		listeners.forEach(l -> l.onScaleChange(old, scale));
 	}
 
@@ -149,7 +158,8 @@ public class Transform {
 		rotation.z = r.z;
 
 		rDirty = true;
-
+		mDirty = true;
+		
 		listeners.forEach(l -> l.onRotationChange(old, rotation));
 	}
 
@@ -187,24 +197,28 @@ public class Transform {
 		rDirty = false;
 	}
 
-	public static Mat4 translate(Mat4 mat, Vec3 translation) {
-
-		Mat4 tmp = Mat4.identity();
-		tmp.set(0, 3, translation.x);
-		tmp.set(1, 3, translation.y);
-		tmp.set(2, 3, translation.z);
-
-		return mat.mul(tmp);
+	public static Mat4 translate(Mat4 mat, Vec3 t) {
+		// @formatter:off
+		return mat.mul(
+				new Mat4(
+					1.0, 0.0, 0.0, t.x,
+					0.0, 1.0, 0.0, t.y,
+					0.0, 0.0, 1.0, t.z,
+					0.0, 0.0, 0.0, 1.0)
+				);
+		// @formatter:on
 	}
 
-	public static Mat4 scale(Mat4 mat, Vec3 scale) {
-
-		Mat4 tmp = Mat4.identity();
-		tmp.set(0, 0, scale.x);
-		tmp.set(1, 1, scale.y);
-		tmp.set(2, 2, scale.z);
-
-		return mat.mul(tmp);
+	public static Mat4 scale(Mat4 mat, Vec3 s) {
+		// @formatter:off
+		return mat.mul(
+				new Mat4(
+					s.x, 0.0, 0.0, 0.0,
+					0.0, s.y, 0.0, 0.0,
+					0.0, 0.0, s.z, 0.0,
+					0.0, 0.0, 0.0, 1.0)
+				);
+		// @formatter:on
 	}
 
 	public static Mat4 rotate(Mat4 mat, double angle, Axis axis) {
@@ -212,7 +226,7 @@ public class Transform {
 		double cos = Math.cos(angle);
 		double sin = Math.sin(angle);
 
-		Mat4 tmp = Mat4.identity();
+		final Mat4 tmp;
 
 		switch (axis) {
 		case X:
@@ -245,6 +259,8 @@ public class Transform {
             			);
                 // @formatter:on
 			break;
+		default:
+			throw new IllegalArgumentException("Undefined axis");
 		}
 
 		return mat.mul(tmp);

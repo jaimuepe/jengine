@@ -13,14 +13,14 @@ import graphics.RenderContext;
 public class Renderer extends Component {
 
 	private MeshData meshData;
-	private Color color;
+	private Vec3 color;
 
 	public Renderer() {
 		super("renderer");
 		setFlag(Flags.RENDERABLE);
 	}
 
-	public void setColor(Color color) {
+	public void setColor(Vec3 color) {
 		this.color = color;
 	}
 
@@ -41,6 +41,9 @@ public class Renderer extends Component {
 		Mat4 M = getOwner().transform.getModelMatrix();
 
 		Mat4 PVM = PV.mul(M);
+		
+		Mat4 N = M.inverse().transpose();
+		
 
 		for (int i = 0; i < meshData.indices.length; i += 3) {
 
@@ -72,8 +75,10 @@ public class Renderer extends Component {
 			if ((edgeA.x * edgeB.y - edgeA.y * edgeB.x) > 0.0) {
 				continue;
 			}
+			
+			Vec3 normal = N.mul(new Vec4(meshData.normals[i / 3], 0.0)).toVec3();
 
-			context.queue.add(new Triangle(p1, p2, p3, color));
+			context.queue.add(new Triangle(p1, p2, p3, normal, color));
 		}
 	}
 

@@ -28,6 +28,12 @@ public class Vec3 {
 	public Vec3 sum(Vec3 other) {
 		return sum(this, other);
 	}
+	
+	public void sumSelf(Vec3 other) {
+		this.x += other.x;
+		this.y += other.y;
+		this.z += other.z;
+	}
 
 	public Vec3 minus(Vec3 other) {
 		return minus(this, other);
@@ -47,6 +53,10 @@ public class Vec3 {
 
 	public Vec3 neg() {
 		return new Vec3(-x, y, -z);
+	}
+	
+	public Vec3 scale(Vec3 other) {
+		return new Vec3(x * other.x, y * other.y, z * other.z);
 	}
 
 	public static double dot(Vec3 u, Vec3 v) {

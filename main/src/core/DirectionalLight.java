@@ -2,13 +2,12 @@ package core;
 
 import java.awt.Color;
 
-public class DirectionalLight {
-	
+public class DirectionalLight extends Light {
+
 	public final Vec3 direction;
-	public final Color color;
-	
-	public DirectionalLight(Vec3 direction, Color color) {
+
+	public DirectionalLight(Vec3 direction, Vec3 color) {
+		super(color);
 		this.direction = direction;
-		this.color = color;
 	}
 }

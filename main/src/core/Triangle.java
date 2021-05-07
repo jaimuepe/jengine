@@ -8,16 +8,20 @@ public class Triangle {
     public final Vec3 p2;
     public final Vec3 p3;
 
+    public final Vec3 normalWorld;
+    
     public final Vec3 center;
 
-    public final Color color;
+    public final Vec3 color;
 
-    public Triangle(Vec3 p1, Vec3 p2, Vec3 p3, Color color) {
+    public Triangle(Vec3 p1, Vec3 p2, Vec3 p3, Vec3 normalWorld, Vec3 color) {
 
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
 
+        this.normalWorld = normalWorld;
+        
         this.color = color;
 
         this.center = new Vec3(
